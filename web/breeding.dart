@@ -5,6 +5,7 @@ import "dart:html" hide Body;
 import "package:box2d/box2d_browser.dart";
 
 import 'package:dart_summit_2016/dartship.dart';
+import 'package:dart_summit_2016/shipbrain.dart';
 
 class CanvasBreederApp {
   /** All of the bodies in a simulation. */
@@ -67,6 +68,7 @@ class CanvasBreederApp {
   int _printCounter = 0;
 
   DartShip _dartShip;
+  ShipBrainMode _brainMode;
 
   CanvasBreederApp(this.canvasContainerEl,
       {Vector2 gravity, this.viewportScale: _VIEWPORT_SCALE}) {
@@ -101,6 +103,7 @@ class CanvasBreederApp {
       world.stepDt(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
       // ---- START CUSTOM STEP CODE
+      _brainMode.control();
       _dartShip.step();
 
       // ---- END CUSTOM STEP CODE
@@ -187,6 +190,7 @@ class CanvasBreederApp {
 
   void initialize() {
     _dartShip = new DartShip(world);
+    _brainMode = new ParkShipBrainMode(world, _dartShip);
   }
 
   /**

@@ -1,3 +1,7 @@
+library dart_summit_2016.dartship;
+
+import 'dart:math' as Math;
+
 import 'package:box2d/box2d.dart';
 import 'package:vector_math/vector_math_64.dart' show radians, Matrix2;
 
@@ -18,6 +22,7 @@ class DartShip {
   Thruster frontRightThruster;
 
   List<Thruster> thrusters;
+  List<RevolutePart> revoluteParts;
 
   Vector2 get position => _body.getWorldPoint(new Vector2.zero());
 
@@ -66,6 +71,11 @@ class DartShip {
       frontRightThruster
     ];
 
+    revoluteParts = thrusters
+        .map((t) => t.revolutePart)
+        .where((p) => p != null)
+        .toList(growable: false);
+
     leftLeg.currentAngleNormalized = 0.0;
     rightLeg.currentAngleNormalized = 0.0;
     leftFlap.currentAngleNormalized = 0.0;
@@ -74,16 +84,29 @@ class DartShip {
 
   void step() {
     for (var thruster in thrusters) {
-      final thrust = thruster.getWorldForce(1.0, body);
-      body.applyForce(thrust.force, thrust.point);
+      thruster.applyCurrentPower(body);
+
+      // DEBUG
+      final thrust = thruster.getWorldForce(thruster.currentPower, body);
 
       _world.debugDraw.drawSegment(
           thrust.point.clone(),
           thrust.point.clone().add(thrust.force),
           new Color3i.fromRGBd(0.0, 0.0, 250.0));
     }
+  }
 
-    leftFlap.moveToDesiredAngleNormalized(1.0);
+  Vector2 getRelativeVectorTo(Vector2 targetPosition) =>
+      body.getLocalPoint(targetPosition);
+
+  num getAngleTo(Vector2 targetPosition) {
+    final Vector2 forward = new Vector2(1.0, 0.0);
+    final Vector2 right = new Vector2(0.0, 1.0);
+
+    Vector2 relativeVectorToTarget = getRelativeVectorTo(targetPosition);
+    return Math.acos(relativeVectorToTarget.dot(forward) /
+            (forward.length * relativeVectorToTarget.length)) *
+        (relativeVectorToTarget.dot(right) > 0 ? 1 : -1);
   }
 }
 
@@ -96,9 +119,15 @@ class Thrust {
 }
 
 class Thruster {
+  static const double MAX_STEP_CHANGE = 0.05;
+
   final Vector2 _position;
   final Vector2 maxForce;
   final RevolutePart revolutePart;
+
+  double _currentPower = 0.0;
+  double get currentPower => _currentPower;
+
   Thruster(num x, num y, num maxForwardThrust, num maxLateralThrust,
       {this.revolutePart})
       : _position = new Vector2(x.toDouble(), y.toDouble()),
@@ -121,6 +150,11 @@ class Thruster {
     }
   }
 
+  void moveToDesiredPower(double value, {double maxChange: MAX_STEP_CHANGE}) {
+    assert(value >= 0.0 && value <= 1.0);
+    _currentPower += (value - _currentPower).clamp(-maxChange, maxChange);
+  }
+
   Vector2 getLocalThrustVector(num power) {
     return _rotation.transformed(maxForce.scaled(power));
   }
@@ -133,6 +167,11 @@ class Thruster {
 
   Thrust getWorldForce(num power, Body body) {
     return new Thrust.worldFromLocal(getForce(power), body);
+  }
+
+  void applyCurrentPower(Body body) {
+    final thrust = getWorldForce(_currentPower, body);
+    body.applyForce(thrust.force, thrust.point);
   }
 }
 
