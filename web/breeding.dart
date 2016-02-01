@@ -1,9 +1,10 @@
 library dartship_breeding;
 
 import "dart:html" hide Body;
-import "dart:async";
+
 import "package:box2d/box2d_browser.dart";
-import 'dartship.dart';
+
+import 'package:dart_summit_2016/dartship.dart';
 
 class CanvasBreederApp {
   /** All of the bodies in a simulation. */
