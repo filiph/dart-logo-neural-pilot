@@ -83,31 +83,7 @@ class CanvasBreederApp {
     debugDraw.appendFlags(DebugDraw.JOINT_BIT |
         DebugDraw.PAIR_BIT |
         DebugDraw.CENTER_OF_MASS_BIT);
-    bool updateCallback(_) {
-      _dartShip.leftFlap.currentAngleNormalized = 0.0;
-
-      final Force fLeft =
-          _dartShip.frontLeftThruster.getWorldForce(1.0, _dartShip.body);
-      _dartShip.body.applyForce(fLeft.force, fLeft.point);
-
-      debugDraw.drawSegment(
-          fLeft.point.clone(),
-          fLeft.point.clone().add(fLeft.force),
-          new Color3i.fromRGBd(0.0, 0.0, 250.0));
-
-      _dartShip.rightFlap.currentAngleNormalized = 1.0;
-
-      Force fRight =
-          _dartShip.frontRightThruster.getWorldForce(1.0, _dartShip.body);
-      _dartShip.body.applyForce(fRight.force, fRight.point);
-
-      debugDraw.drawSegment(
-          fRight.point.clone(),
-          fRight.point.clone().add(fRight.force),
-          new Color3i.fromRGBd(0.0, 0.0, 250.0));
-      return true;
-    }
-    runAnimation(updateCallback);
+    runAnimation();
   }
 
   /** Advances the world forward by timestep seconds. */
@@ -122,6 +98,11 @@ class CanvasBreederApp {
     bool shouldContinue = true;
     for (int i = 0; i < computationToShowRatio; i++) {
       world.stepDt(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
+      // ---- START CUSTOM STEP CODE
+      _dartShip.step();
+
+      // ---- END CUSTOM STEP CODE
 
       if (updateCallback != null) {
         shouldContinue = updateCallback(1);
@@ -148,7 +129,7 @@ class CanvasBreederApp {
     world.drawDebugData();
 
     if (shouldContinue) {
-      new Future(() {
+      window.requestAnimationFrame((t) {
         step(1, updateCallback);
       });
     }
