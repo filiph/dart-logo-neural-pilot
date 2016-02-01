@@ -204,16 +204,16 @@ class RevolutePart {
     _currentAngle = maxAngle * value;
   }
 
+  RevolutePart(num x, num y, this.maxAngle)
+      : jointPosition = new Vector2(x.toDouble(), y.toDouble()) {
+    assert(maxAngle != 0);
+  }
+
   void moveToDesiredAngleNormalized(double value,
       {double maxChange: MAX_STEP_CHANGE}) {
     assert(value >= 0 && value <= 1.0);
     double desiredAngle = maxAngle * value;
     _currentAngle +=
         (desiredAngle - _currentAngle).clamp(-maxChange, maxChange);
-  }
-
-  RevolutePart(num x, num y, this.maxAngle)
-      : jointPosition = new Vector2(x.toDouble(), y.toDouble()) {
-    assert(maxAngle != 0);
   }
 }
