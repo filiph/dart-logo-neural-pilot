@@ -66,7 +66,7 @@ class DartShip {
       frontRightThruster
     ];
 
-    leftLeg.currentAngleNormalized = 1.0;
+    leftLeg.currentAngleNormalized = 0.0;
     rightLeg.currentAngleNormalized = 0.0;
     leftFlap.currentAngleNormalized = 0.0;
     rightFlap.currentAngleNormalized = 0.0;
@@ -82,6 +82,8 @@ class DartShip {
           thrust.point.clone().add(thrust.force),
           new Color3i.fromRGBd(0.0, 0.0, 250.0));
     }
+
+    leftFlap.moveToDesiredAngleNormalized(1.0);
   }
 }
 
@@ -139,6 +141,9 @@ class RevolutePart {
   final double maxAngle;
 
   double _currentAngle = 0.0;
+
+  static const double MAX_STEP_CHANGE = 0.05;
+
   double get currentAngle => _currentAngle;
   set currentAngle(double value) {
     if (currentAngle < 0 && maxAngle >= 0) _currentAngle = 0.0;
@@ -156,8 +161,16 @@ class RevolutePart {
 
   double get currentAngleNormalized => (_currentAngle / maxAngle);
   set currentAngleNormalized(double value) {
-    assert(value >= 0 && value <= maxAngle);
+    assert(value >= 0 && value <= 1.0);
     _currentAngle = maxAngle * value;
+  }
+
+  void moveToDesiredAngleNormalized(double value,
+      {double maxChange: MAX_STEP_CHANGE}) {
+    assert(value >= 0 && value <= 1.0);
+    double desiredAngle = maxAngle * value;
+    _currentAngle +=
+        (desiredAngle - _currentAngle).clamp(-maxChange, maxChange);
   }
 
   RevolutePart(num x, num y, this.maxAngle)
