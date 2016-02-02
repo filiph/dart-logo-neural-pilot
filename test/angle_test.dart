@@ -46,5 +46,14 @@ void main() {
     test("throws on zero vector b", () {
       expect(() => angle(down, new Vector2(0.0, 0.0)), throwsArgumentError);
     });
+    test("doesn't modify vectors", () {
+      var a = new Vector2(1.0, 0.0);
+      var b = new Vector2(2.0, -1.0);
+      var _ = angle(a, b);
+      expect(a.x, 1.0);
+      expect(a.y, 0.0);
+      expect(b.x, 2.0);
+      expect(b.y, -1.0);
+    });
   });
 }
