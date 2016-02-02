@@ -57,12 +57,14 @@ class ParkingMode extends NeuralPilotMode {
   @override
   num iterativeFitnessFunction(NeuralPilot pilot) {
     var distance = pilot.ship.position.distanceTo(targetPosition);
+    if (distance.isInfinite) {
+      throw new StateError("Distance cannot be infinite.");
+    }
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation).abs();
     var orientationAndDistance =
         Math.max(distance / 10, orientationError).clamp(0, Math.PI * 2);
     double angVel = pilot.ship.body.angularVelocity;
-    if (distance.isInfinite) throw "bad";
 
     return distance + orientationAndDistance + angVel;
   }
