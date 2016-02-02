@@ -10,6 +10,7 @@ class NeuralPilot {
   final NeuralPilotMode mode;
 
   // TODO(filiph): get rid of this, make a better implementation of Neuron
+  // http://stackoverflow.com/questions/4719633/java-simple-neural-network-setup
   static final Neuron neuronPrototype = new TanHNeuron();
 
   DartShip ship;
