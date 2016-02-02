@@ -1,11 +1,10 @@
 library dart_summit_2016.ship.dartship;
 
-import 'dart:math' as Math;
-
 import 'package:box2d/box2d.dart';
 import 'package:vector_math/vector_math_64.dart' show radians, Matrix2;
 import 'package:dart_summit_2016/ship/thruster.dart';
 import 'package:dart_summit_2016/ship/revolute_part.dart';
+import 'package:dart_summit_2016/angle_utils.dart';
 
 class DartShip {
   Body get body => _body;
@@ -99,18 +98,14 @@ class DartShip {
   }
 
   final Vector2 _zeroVector = new Vector2.zero();
-  final Vector2 _forwardVector = new Vector2(1.0, 0.0);
-  final Vector2 _rightVector = new Vector2(0.0, 1.0);
-  final Matrix2 _rightAngleRotation = new Matrix2.rotation(radians(90.0));
+  final Vector2 _forwardVector = new Vector2(0.0, 1.0);
 
   Vector2 getRelativeVectorTo(Vector2 targetPosition) =>
       body.getLocalPoint(targetPosition);
 
   num getAngleTo(Vector2 targetPosition) {
     Vector2 relativeVectorToTarget = getRelativeVectorTo(targetPosition);
-    return Math.acos(relativeVectorToTarget.dot(_forwardVector) /
-            (_forwardVector.length * relativeVectorToTarget.length)) *
-        (relativeVectorToTarget.dot(_rightVector) > 0 ? 1 : -1);
+    return angle(relativeVectorToTarget, _forwardVector);
   }
 
   /*
@@ -120,12 +115,9 @@ class DartShip {
    */
   num getVelocityAngleOf(Vector2 target) {
     Vector2 relativeVector = getRelativeVectorTo(target);
-    Vector2 rightRelativeVector =
-        _rightAngleRotation.transformed(relativeVector);
     Vector2 relativeVelocity =
         body.getLinearVelocityFromLocalPoint(_zeroVector);
-    return Math.acos(relativeVelocity.dot(relativeVector) /
-            (relativeVector.length * relativeVelocity.length)) *
-        (relativeVelocity.dot(rightRelativeVector) > 0 ? 1 : -1);
+    if (relativeVelocity.length2 == 0.0) return 0.0;
+    return angle(relativeVelocity, relativeVector);
   }
 }

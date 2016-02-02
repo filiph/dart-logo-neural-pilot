@@ -138,16 +138,19 @@ class NeuralPilotSerialEvaluator
     // Set the simulation according to pre-specified plans.
     neuralPilotMode.setupFunctions[experimentNumber](simulation);
 
-    onStartOneEvaluation(simulation, pilot);
+    if (onStartOneEvaluation != null) onStartOneEvaluation(simulation, pilot);
 
     double cummulativeScore = 0.0;
     for (int i = 0; i < neuralPilotMode.timeToEvaluate; i++) {
-      await visualizationCallback(simulation, pilot);
+      if (visualizationCallback != null) {
+        await visualizationCallback(simulation, pilot);
+      }
+
       simulation.step(Simulation.TIME_STEP);
       num score = neuralPilotMode.iterativeFitnessFunction(pilot);
       if (score == null) throw "Fitness function returned a null value.";
       if (score.isInfinite) {
-        onEndOneEvaluation(simulation, pilot);
+        if (onEndOneEvaluation != null) onEndOneEvaluation(simulation, pilot);
 
         // Infinity plus anything is infinity.
         return double.INFINITY;
@@ -155,7 +158,7 @@ class NeuralPilotSerialEvaluator
       cummulativeScore += score;
     }
 
-    onEndOneEvaluation(simulation, pilot);
+    if (onEndOneEvaluation != null) onEndOneEvaluation(simulation, pilot);
 
     return cummulativeScore;
   }
