@@ -61,8 +61,10 @@ class ParkingMode extends NeuralPilotMode {
     var orientationError = angle(forward, targetOrientation).abs();
     var orientationAndDistance =
         Math.max(distance / 10, orientationError).clamp(0, Math.PI * 2);
+    double angVel = pilot.ship.body.angularVelocity;
+    if (distance.isInfinite) throw "bad";
 
-    return distance + orientationAndDistance;
+    return distance + orientationAndDistance + angVel;
   }
 
   @override
@@ -70,6 +72,10 @@ class ParkingMode extends NeuralPilotMode {
         (s) {
           targetPosition = new Vector2.zero();
           targetOrientation = new Vector2(1.0, 0.0);
+        },
+        (s) {
+          targetPosition = new Vector2(50.0, 0.0);
+          targetOrientation = new Vector2(-1.0, 0.0);
         },
         (s) {
           targetPosition = new Vector2(200.0, 10.0);
@@ -82,10 +88,6 @@ class ParkingMode extends NeuralPilotMode {
         (s) {
           targetPosition = new Vector2.zero();
           targetOrientation = new Vector2(-1.0, -1.0);
-        },
-        (s) {
-          targetPosition = new Vector2(50.0, 0.0);
-          targetOrientation = new Vector2(-1.0, 0.0);
         },
         (s) {
           targetPosition = new Vector2(-50.0, 500.0);
