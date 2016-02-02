@@ -96,17 +96,35 @@ class DartShip {
     }
   }
 
+  final Vector2 _zeroVector = new Vector2.zero();
+  final Vector2 _forwardVector = new Vector2(1.0, 0.0);
+  final Vector2 _rightVector = new Vector2(0.0, 1.0);
+  final Matrix2 _rightAngleRotation = new Matrix2.rotation(radians(90.0));
+
   Vector2 getRelativeVectorTo(Vector2 targetPosition) =>
       body.getLocalPoint(targetPosition);
 
   num getAngleTo(Vector2 targetPosition) {
-    final Vector2 forward = new Vector2(1.0, 0.0);
-    final Vector2 right = new Vector2(0.0, 1.0);
-
     Vector2 relativeVectorToTarget = getRelativeVectorTo(targetPosition);
-    return Math.acos(relativeVectorToTarget.dot(forward) /
-            (forward.length * relativeVectorToTarget.length)) *
-        (relativeVectorToTarget.dot(right) > 0 ? 1 : -1);
+    return Math.acos(relativeVectorToTarget.dot(_forwardVector) /
+            (_forwardVector.length * relativeVectorToTarget.length)) *
+        (relativeVectorToTarget.dot(_rightVector) > 0 ? 1 : -1);
+  }
+
+  /*
+   * The angle at which [this] is moving towards/away from [target]. For
+   * example, when this ship is aproaching target straight on, the velocity
+   * angle would be 180° (pi).
+   */
+  num getVelocityAngleOf(Vector2 target) {
+    Vector2 relativeVector = getRelativeVectorTo(target);
+    Vector2 rightRelativeVector =
+        _rightAngleRotation.transformed(relativeVector);
+    Vector2 relativeVelocity =
+        body.getLinearVelocityFromLocalPoint(_zeroVector);
+    return Math.acos(relativeVelocity.dot(relativeVector) /
+            (relativeVector.length * relativeVelocity.length)) *
+        (relativeVelocity.dot(rightRelativeVector) > 0 ? 1 : -1);
   }
 }
 
