@@ -87,13 +87,15 @@ class DartShip {
     for (var thruster in thrusters) {
       thruster.applyCurrentPower(body);
 
-      // DEBUG
-      final thrust = thruster.getWorldForce(thruster.currentPower, body);
+      if (_world.debugDraw != null) {
+        // DEBUG
+        final thrust = thruster.getWorldForce(thruster.currentPower, body);
 
-      _world.debugDraw.drawSegment(
-          thrust.point.clone(),
-          thrust.point.clone().add(thrust.force),
-          new Color3i.fromRGBd(0.0, 0.0, 250.0));
+        _world.debugDraw.drawSegment(
+            thrust.point.clone(),
+            thrust.point.clone().add(thrust.force),
+            new Color3i.fromRGBd(0.0, 0.0, 250.0));
+      }
     }
   }
 

@@ -10,6 +10,8 @@ import 'package:dart_summit_2016/simulation.dart';
 import 'package:dart_summit_2016/neural_pilot/modes/parking_mode.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
 
+part 'winners.dart';
+
 class CanvasBreederApp {
   /** The default canvas width and height. */
   static const int CANVAS_WIDTH = 900;
@@ -76,7 +78,8 @@ class CanvasBreederApp {
 
   void start() {
     runGeneticAlgorithm(new ParkingMode(), visualizationCallback,
-        initializeAnimation, destroyAnimation);
+        initializeAnimation, destroyAnimation,
+        chromosomesList: CHROMOSOMES_LIST);
   }
 
   /**

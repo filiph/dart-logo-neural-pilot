@@ -36,7 +36,7 @@ abstract class NeuralPilotMode {
    * Number of simulation steps to evaluate. This should be enough for this
    * brain to do its thing and stay at the needed position.
    */
-  int timeToEvaluate = 500;
+  int timeToEvaluate = 2000;
 
   /**
    * Generates input for given [ship] and its [target] in a given situation [s].
