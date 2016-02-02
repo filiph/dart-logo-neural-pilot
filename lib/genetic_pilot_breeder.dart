@@ -101,9 +101,10 @@ class NeuralPilotPhenotype extends Phenotype<num> {
 
   List<num> genes;
 
+  final Math.Random _random = new Math.Random();
+
   num mutateGene(num gene, num strength) {
-    Math.Random random = new Math.Random();
-    num delta = (random.nextDouble() * 2 - 1) * strength;
+    num delta = (_random.nextDouble() * 2 - 1) * strength;
     return (gene + delta).clamp(-1, 1);
   }
 }
