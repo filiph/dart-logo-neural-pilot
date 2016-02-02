@@ -127,6 +127,16 @@ class CanvasBreederApp {
     // Clear the animation panel
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+    debugDraw.setCamera(pilot.ship.body.position.x * viewportScale + 450,
+        pilot.ship.body.position.y * viewportScale + 300, viewportScale);
+
+    if (pilot.mode is ParkingMode) {
+      var target = (pilot.mode as ParkingMode).targetPosition;
+      // Notice: drawCircle mutates [target] so we need to clone.
+      debugDraw.drawCircle(
+          target.clone(), 5.0, new Color3i.fromRGBd(0.0, 250.0, 0.0));
+    }
+
     simulation.world.drawDebugData();
 
     return timestamp;

@@ -93,8 +93,8 @@ class DartShip {
 
         _world.debugDraw.drawSegment(
             thrust.point.clone(),
-            thrust.point.clone().add(thrust.force),
-            new Color3i.fromRGBd(0.0, 0.0, 250.0));
+            thrust.point.clone().add(thrust.force.negate()),
+            new Color3i.fromRGBd(250.0, 0.0, 0.0));
       }
     }
   }
