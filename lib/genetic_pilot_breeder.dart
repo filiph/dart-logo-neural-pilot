@@ -10,18 +10,14 @@ import 'package:dart_summit_2016/simulation.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot_mode.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
 
-/**
- * Start the algorithm. Returns a [Future] that completes with the winner
- * [NeuralPilotPhenotype].
- */
-Future<NeuralPilotPhenotype> runGeneticAlgorithm(
+GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
     NeuralPilotMode pilotModeToTest,
     AsyncVisualizationCallback visualizationCallback,
     VisualizationCallback onStartOneEvaluation,
     VisualizationCallback onEndOneEvaluation,
     {List<List<num>> chromosomesList,
     TextOutputFunction showHeadline,
-    LoggingFunction logMessage}) async {
+    LoggingFunction logMessage}) {
   if (logMessage == null) logMessage = print;
   if (showHeadline == null) showHeadline = (String msg) =>
       print("=== $msg ===");
@@ -56,19 +52,9 @@ Future<NeuralPilotPhenotype> runGeneticAlgorithm(
 
   GeneticAlgorithm<NeuralPilotPhenotype> algo = new GeneticAlgorithm(
       firstGeneration, evaluator, breeder,
-      statusf: showHeadline);
-  algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
-    // TODO: externalize so that we can save to localStorage / disk
-    logMessage("Best phenotype:\n${g.members.first.genesAsString}");
-  });
+      statusf: showHeadline, printf: (_) {});
 
-  await algo.runUntilDone();
-
-  showHeadline("Genetic algorithm completed");
-  algo.generations.last.members
-      .forEach((Phenotype ph) => logMessage("${ph.genesAsString},"));
-
-  return algo.generations.last.best;
+  return algo;
 }
 
 /// Replaces a text of some element.
@@ -126,7 +112,6 @@ class NeuralPilotSerialEvaluator
 
   Future<num> runOneEvaluation(
       NeuralPilotPhenotype phenotype, int experimentNumber) async {
-    print("Experiment $experimentNumber");
     if (experimentNumber >= neuralPilotMode.setupFunctions.length) {
       return new Future.value(null);
     }

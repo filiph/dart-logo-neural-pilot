@@ -9,6 +9,7 @@ import 'package:dart_summit_2016/genetic_pilot_breeder.dart';
 import 'package:dart_summit_2016/simulation.dart';
 import 'package:dart_summit_2016/neural_pilot/modes/parking_mode.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
+import 'package:darwin/darwin.dart';
 
 part 'winners.dart';
 
@@ -69,17 +70,27 @@ class CanvasBreederApp {
   static int computationToPrintRatio = 100;
   int _printCounter = 0;
 
-  // DartShip _dartShip;
-  // NeuralPilotMode _brainMode;
-
-  Simulation simulation;
-
   CanvasBreederApp(this.canvasContainerEl);
 
+  GeneticAlgorithm<NeuralPilotPhenotype> algo;
+
   void start() {
-    runGeneticAlgorithm(new ParkingMode(), visualizationCallback,
+    algo = setUpGeneticAlgorithm(new ParkingMode(), visualizationCallback,
         initializeAnimation, destroyAnimation,
         chromosomesList: CHROMOSOMES_LIST);
+
+    algo.MAX_EXPERIMENTS = 20000;
+
+    algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
+      // TODO: externalize so that we can save to localStorage / disk
+      print("Best phenotype:\n${g.members.first.genesAsString}");
+    });
+
+    algo.runUntilDone().then((_) {
+      print("Genetic algorithm completed");
+      algo.generations.last.members
+          .forEach((Phenotype ph) => print("${ph.genesAsString},"));
+    });
   }
 
   /**
