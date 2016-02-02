@@ -42,15 +42,15 @@ class DartShip {
     mainBodyDef.type = BodyType.DYNAMIC;
     // Reality is unrealistic - so we want even "space" to have some damping
     // in order to "feel real".
-    mainBodyDef.linearDamping = 0.1;
-    mainBodyDef.angularDamping = 0.2;
+    mainBodyDef.linearDamping = 0.05;
+    mainBodyDef.angularDamping = 0.1;
     mainBodyDef.position = new Vector2.zero();
 
     // Create body and fixture from definitions
     _body = _world.createBody(mainBodyDef);
     _body.createFixtureFromFixtureDef(activeFixtureDef);
 
-    mainThruster = new Thruster(0.0, 5.9, -5.0 /* 20 */, 0.0);
+    mainThruster = new Thruster(0.0, 5.9, -10.0, 0.0);
 
     leftLeg = new RevolutePart(-4.6, -0.9, radians(30.0));
     leftLegThruster = new Thruster(1.4, 6.2, -2, 2, revolutePart: leftLeg);
