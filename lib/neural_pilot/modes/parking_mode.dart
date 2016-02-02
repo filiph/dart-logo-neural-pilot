@@ -47,7 +47,7 @@ class ParkingMode extends NeuralPilotMode {
       valueToNeuralInput(velocityAngle, 0, 2),
       valueToNeuralInput(velocityAngle, 0, -2),
       valueToNeuralInput(orientationError, 0, Math.PI * 2),
-      valueToNeuralInput(orientationError, 0, -Math.PI * 2),
+      valueToNeuralInput(orientationError, 0, -Math.PI * 2)
     ];
   }
 
@@ -69,9 +69,31 @@ class ParkingMode extends NeuralPilotMode {
   List<SetupFunction> get setupFunctions => [
         (s) {
           targetPosition = new Vector2.zero();
+          targetOrientation = new Vector2(1.0, 0.0);
         },
         (s) {
           targetPosition = new Vector2(200.0, 10.0);
+          targetOrientation = new Vector2(1.0, 0.0);
+        },
+        (s) {
+          targetPosition = new Vector2(-100.0, 10.0);
+          targetOrientation = new Vector2(1.0, 0.0);
+        },
+        (s) {
+          targetPosition = new Vector2.zero();
+          targetOrientation = new Vector2(-1.0, -1.0);
+        },
+        (s) {
+          targetPosition = new Vector2(50.0, 0.0);
+          targetOrientation = new Vector2(-1.0, 0.0);
+        },
+        (s) {
+          targetPosition = new Vector2(-50.0, 500.0);
+          targetOrientation = new Vector2(0.0, -1.0);
+        },
+        (s) {
+          targetPosition = new Vector2(200.0, -1000.0);
+          targetOrientation = new Vector2(0.5, 1.0);
         }
       ];
 }
