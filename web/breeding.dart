@@ -1,19 +1,16 @@
 library dartship_breeding;
 
-import "dart:html" hide Body;
+import 'dart:async';
+import "dart:html";
 
 import "package:box2d/box2d_browser.dart";
 
-import 'package:dart_summit_2016/dartship.dart';
-import 'package:dart_summit_2016/neural_pilot.dart';
-import 'package:dart_summit_2016/simulation.dart';
 import 'package:dart_summit_2016/genetic_pilot_breeder.dart';
-import 'dart:async';
+import 'package:dart_summit_2016/simulation.dart';
+import 'package:dart_summit_2016/neural_pilot/modes/parking_mode.dart';
+import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
 
 class CanvasBreederApp {
-  /** All of the bodies in a simulation. */
-  List<Body> bodies = new List<Body>();
-
   /** The default canvas width and height. */
   static const int CANVAS_WIDTH = 900;
   static const int CANVAS_HEIGHT = 600;
@@ -82,68 +79,6 @@ class CanvasBreederApp {
         initializeAnimation, destroyAnimation);
   }
 
-//   /** Advances the world forward by timestep seconds. */
-//   void step(num timestamp, [Function updateCallback]) {
-//     if (stopped) return;
-//
-//     if (computationToShowRatio <= 10) {
-//       // Clear the animation panel
-//       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-//     }
-//
-//     bool shouldContinue = true;
-//     for (int i = 0; i < computationToShowRatio; i++) {
-//       world.stepDt(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-//
-//       // ---- START CUSTOM STEP CODE
-//       _brainMode.control();
-//       _dartShip.step();
-//
-//       // ---- END CUSTOM STEP CODE
-//
-//       if (updateCallback != null) {
-//         shouldContinue = updateCallback(1);
-//         if (!shouldContinue) {
-//           break;
-//         }
-//       }
-//     }
-//
-//     _printCounter += 1;
-//     if (_printCounter > computationToPrintRatio) {
-//       // print("Dart ship is at ${_dartShip.position}");
-//       // print("Angle ${_dartShip.leftFlap.currentAngle}");
-//
-//       _printCounter = 0;
-//     }
-//
-//     if (computationToShowRatio > 10) {
-//       // Clear the animation panel
-//       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-//     }
-//
-//     // Draw debug data
-//     world.drawDebugData();
-//
-//     if (shouldContinue) {
-//       window.requestAnimationFrame((t) {
-//         step(1, updateCallback);
-//       });
-//     }
-//
-// //    window.requestAnimationFrame((num time) {
-// //      if (updateCallback != null) {
-// //        bool cont = updateCallback(time);
-// //        if (!cont) {
-// //          return;
-// //        }
-// //      }
-// //      step(time, updateCallback);
-// //    });
-//   }
-
-  final extents = new Vector2(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-
   /**
    * Creates the canvas and readies the demo for animation. Must be called
    * before calling runAnimation.
@@ -158,7 +93,7 @@ class CanvasBreederApp {
     ctx = canvas.getContext("2d");
 
     // Create the viewport transform with the center at extents.
-
+    final extents = new Vector2(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
     viewport = new CanvasViewportTransform(extents, extents);
     viewport.scale = viewportScale;
 

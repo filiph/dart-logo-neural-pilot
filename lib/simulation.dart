@@ -1,7 +1,9 @@
+library dart_summit_2016.simulation;
+
 import 'package:box2d/box2d.dart';
 
-import 'package:dart_summit_2016/dartship.dart';
-import 'package:dart_summit_2016/neural_pilot.dart';
+import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
+import 'package:dart_summit_2016/ship/dartship.dart';
 
 class Simulation {
   static const num TIME_STEP = 1 / 30;

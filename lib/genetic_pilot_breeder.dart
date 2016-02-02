@@ -1,11 +1,14 @@
+library dart_summit_2016.genetic_pilot_breeder;
+
 import 'dart:async';
 import 'dart:math' as Math;
 
 import 'package:darwin/darwin.dart';
 import 'package:backy/backy.dart';
 
-import 'package:dart_summit_2016/neural_pilot.dart';
 import 'package:dart_summit_2016/simulation.dart';
+import 'package:dart_summit_2016/neural_pilot/neural_pilot_mode.dart';
+import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
 
 /**
  * Start the algorithm. Returns a [Future] that completes with the winner
