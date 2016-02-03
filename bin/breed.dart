@@ -5,6 +5,7 @@ import 'package:darwin/darwin.dart';
 
 import 'package:dart_summit_2016/genetic_pilot_breeder.dart';
 import 'package:dart_summit_2016/neural_pilot/modes/parking_mode.dart';
+import '../web/winners.dart';
 
 Future main(List<String> args) async {
   if (args.isEmpty) {
@@ -14,9 +15,11 @@ Future main(List<String> args) async {
   var filename = args.single;
   IOSink fileSink = new File(filename).openWrite();
 
-  var algo = setUpGeneticAlgorithm(new ParkingMode(), null, null, null);
+  var algo = setUpGeneticAlgorithm(new ParkingMode(), null, null, null,
+      chromosomesList: CHROMOSOMES_LIST);
+  algo.breeder.fitnessSharingRadius = 0.05;
 
-  algo.MAX_EXPERIMENTS = 5000;
+  algo.MAX_EXPERIMENTS = 20000;
 
   algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
     fileSink.writeln("\n\nGeneration ${algo.currentGeneration} evaluated:");
