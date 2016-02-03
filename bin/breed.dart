@@ -17,9 +17,9 @@ Future main(List<String> args) async {
 
   var algo = setUpGeneticAlgorithm(new ParkingMode(), null, null, null,
       chromosomesList: CHROMOSOMES_LIST);
-  algo.breeder.fitnessSharingRadius = 0.05;
 
-  algo.MAX_EXPERIMENTS = 20000;
+  algo.breeder.fitnessSharingRadius = 0.05;
+  algo.MAX_EXPERIMENTS = 50000;
 
   algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
     fileSink.writeln("\n\nGeneration ${algo.currentGeneration} evaluated:");
@@ -36,6 +36,11 @@ Future main(List<String> args) async {
 
   fileSink.writeln("\n\nAnd the winner is:");
   fileSink.writeln(algo.generations.last.best.genesAsString);
+  fileSink.writeln("\n\nconst CHROMOSOMES_LIST = const [");
+  for (var ph in algo.generations.last.members) {
+    fileSink.writeln("  const ${ph.genesAsString},");
+  }
+  fileSink.writeln("];");
   await fileSink.close();
   print("Done.");
   print("Winner = \n${algo.generations.last.best.genesAsString}");
