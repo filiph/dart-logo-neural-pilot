@@ -1,3 +1,3 @@
-part of dartship_breeding;
+library dartship_breeding.winners;
 
 const CHROMOSOMES_LIST = null;

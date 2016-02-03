@@ -11,7 +11,7 @@ import 'package:dart_summit_2016/neural_pilot/modes/parking_mode.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
 import 'package:darwin/darwin.dart';
 
-part 'winners.dart';
+import 'winners.dart';
 
 class CanvasBreederApp {
   /** The default canvas width and height. */
