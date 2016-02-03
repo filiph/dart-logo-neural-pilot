@@ -26,33 +26,35 @@ class ParkingMode extends NeuralPilotMode {
       angleToTarget = pilot.ship.getAngleTo(targetPosition);
     }
     var velocity =
-        pilot.ship.body.getLinearVelocityFromLocalPoint(new Vector2.zero());
-    var velocityAngle;
-    if (distance == 0.0) {
-      velocityAngle = 0.0;
-    } else {
-      velocityAngle = pilot.ship.getVelocityAngleOf(targetPosition);
-    }
+        pilot.ship.body.getLinearVelocityFromWorldPoint(targetPosition);
+
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation);
 
     return <num>[
-      valueToNeuralInput(angVel, 0, 2),
-      valueToNeuralInput(angVel, 0, -2),
-      valueToNeuralInput(relVector.length, 0, 100),
-      valueToNeuralInput(distance, 0, 1000),
-      valueToNeuralInput(angleToTarget, 0, Math.PI * 2),
-      valueToNeuralInput(angleToTarget, 0, -Math.PI * 2),
+      valueToNeuralInput(angVel, -1, 1),
+      valueToNeuralInput(relVector.x, -100, 100),
+      valueToNeuralInput(relVector.y, -100, 100),
+      valueToNeuralInput(relVector.x, -10, 10),
+      valueToNeuralInput(relVector.y, -10, 10),
+      Math.sin(angleToTarget),
+      Math.cos(angleToTarget),
       valueToNeuralInput(velocity.length, 0, 5),
-      valueToNeuralInput(velocityAngle, 0, 2),
-      valueToNeuralInput(velocityAngle, 0, -2),
-      valueToNeuralInput(orientationError, 0, Math.PI * 2),
-      valueToNeuralInput(orientationError, 0, -Math.PI * 2)
+      valueToNeuralInput(velocity.x, -10, 10),
+      valueToNeuralInput(velocity.y, -10, 10),
+      valueToNeuralInput(velocity.x, -100, 100),
+      valueToNeuralInput(velocity.y, -100, 100),
+      Math.sin(orientationError),
+      Math.cos(orientationError),
+      valueToNeuralInput(pilot.ship.leftFlap.currentAngleNormalized, 0, 1),
+      valueToNeuralInput(pilot.ship.rightFlap.currentAngleNormalized, 0, 1),
+      valueToNeuralInput(pilot.ship.leftLeg.currentAngleNormalized, 0, 1),
+      valueToNeuralInput(pilot.ship.rightLeg.currentAngleNormalized, 0, 1)
     ];
   }
 
   @override
-  int inputNeuronsCount = 11;
+  int inputNeuronsCount = 18;
 
   @override
   num iterativeFitnessFunction(NeuralPilot pilot) {
@@ -63,10 +65,11 @@ class ParkingMode extends NeuralPilotMode {
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation).abs();
     var orientationAndDistance =
-        Math.max(distance / 10, orientationError).clamp(0, Math.PI * 2);
-    double angVel = pilot.ship.body.angularVelocity;
+        Math.max(distance / 5, orientationError).clamp(0, Math.PI * 2);
+    double angVel = pilot.ship.body.angularVelocity.abs();
 
-    return distance + orientationAndDistance + angVel;
+    var sum = (distance + orientationAndDistance + angVel);
+    return sum;
   }
 
   @override
@@ -80,7 +83,7 @@ class ParkingMode extends NeuralPilotMode {
           targetOrientation = new Vector2(-1.0, 0.0);
         },
         (s) {
-          targetPosition = new Vector2(200.0, 10.0);
+          targetPosition = new Vector2(150.0, 10.0);
           targetOrientation = new Vector2(1.0, 0.0);
         },
         (s) {
@@ -92,7 +95,7 @@ class ParkingMode extends NeuralPilotMode {
           targetOrientation = new Vector2(-1.0, -1.0);
         },
         (s) {
-          targetPosition = new Vector2(-50.0, 500.0);
+          targetPosition = new Vector2(-50.0, 300.0);
           targetOrientation = new Vector2(0.0, -1.0);
         },
         (s) {
