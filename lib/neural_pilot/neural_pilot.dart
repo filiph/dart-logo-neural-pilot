@@ -25,7 +25,7 @@ class NeuralPilot {
       mode.inputNeuronsCount,
       // 'The optimal size of the hidden layer is usually
       // between the size of the input and size of the output
-      // layers.'
+      // layers.' -- Jeff Heaton
       (mode.inputNeuronsCount + outputNeuronsCount) ~/ 2,
       outputNeuronsCount
     ], neuronPrototype);
