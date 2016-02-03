@@ -143,9 +143,15 @@ class CanvasBreederApp {
 
     if (pilot.mode is ParkingMode) {
       var target = (pilot.mode as ParkingMode).targetPosition;
+      var orientation = (pilot.mode as ParkingMode).targetOrientation;
+
       // Notice: drawCircle mutates [target] so we need to clone.
       debugDraw.drawCircle(
           target.clone(), 5.0, new Color3i.fromRGBd(0.0, 250.0, 0.0));
+      debugDraw.drawSegment(
+          target.clone(),
+          target + orientation.normalized().scaled(10.0),
+          new Color3i.fromRGBd(0.0, 250.0, 0.0));
     }
 
     simulation.world.drawDebugData();
