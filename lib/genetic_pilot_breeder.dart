@@ -24,7 +24,7 @@ GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
 
   showHeadline("Evolving $pilotModeToTest");
 
-  int firstGenerationSize = 20;
+  int firstGenerationSize = 40;
   var firstGeneration = new Generation<NeuralPilotPhenotype>();
 
   var breeder = new GenerationBreeder<NeuralPilotPhenotype>(
@@ -32,22 +32,22 @@ GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
   var evaluator = new NeuralPilotSerialEvaluator(pilotModeToTest,
       visualizationCallback, onStartOneEvaluation, onEndOneEvaluation);
 
-  if (chromosomesList == null) {
-    for (int i = 0; i < firstGenerationSize; i++) {
-      // Create random neural network with the correct layout
-      // by creating a dummy pilot.
-      var dummyPilot =
-          new NeuralPilot.fromShip(pilotModeToTest, new Simulation().ship);
-      var ph = new NeuralPilotPhenotype.fromBackyWeights(
-          dummyPilot.neuralNetwork.weights);
-      firstGeneration.members.add(ph);
-    }
-  } else {
+  if (chromosomesList != null) {
     chromosomesList.forEach((List<num> ch) {
       var ph = breeder.createBlankPhenotype();
       ph.genes = ch;
       firstGeneration.members.add(ph);
     });
+  }
+
+  while (firstGeneration.members.length < firstGenerationSize) {
+    // Create random neural network with the correct layout
+    // by creating a dummy pilot.
+    var dummyPilot =
+        new NeuralPilot.fromShip(pilotModeToTest, new Simulation().ship);
+    var ph = new NeuralPilotPhenotype.fromBackyWeights(
+        dummyPilot.neuralNetwork.weights);
+    firstGeneration.members.add(ph);
   }
 
   GeneticAlgorithm<NeuralPilotPhenotype> algo = new GeneticAlgorithm(
@@ -90,7 +90,7 @@ class NeuralPilotPhenotype extends Phenotype<num> {
   final Math.Random _random = new Math.Random();
 
   num mutateGene(num gene, num strength) {
-    num delta = (_random.nextDouble() * 2 - 1) * strength;
+    num delta = (_random.nextDouble() * 4 - 2) * strength;
     return (gene + delta).clamp(-1, 1);
   }
 }
