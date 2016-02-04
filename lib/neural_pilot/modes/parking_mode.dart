@@ -65,10 +65,10 @@ class ParkingMode extends NeuralPilotMode {
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation).abs();
     var orientationAndDistance =
-        Math.max(distance / 5, orientationError).clamp(0, Math.PI * 2);
+        Math.max(distance / 10, orientationError).clamp(0, Math.PI * 2);
     double angVel = pilot.ship.body.angularVelocity.abs();
 
-    var sum = (distance + orientationAndDistance + angVel);
+    var sum = (Math.log(distance + 1) + orientationAndDistance + angVel);
     return sum;
   }
 

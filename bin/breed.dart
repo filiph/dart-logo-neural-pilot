@@ -19,7 +19,7 @@ Future main(List<String> args) async {
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.breeder.fitnessSharingRadius = 0.05;
-  algo.MAX_EXPERIMENTS = 50000;
+  algo.MAX_EXPERIMENTS = 100000;
 
   algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
     fileSink.writeln("\n\nGeneration ${algo.currentGeneration} evaluated:");
