@@ -18,8 +18,34 @@ Future main(List<String> args) async {
   var algo = setUpGeneticAlgorithm(new ParkingMode(), null, null, null,
       chromosomesList: CHROMOSOMES_LIST);
 
-  algo.breeder.fitnessSharingRadius = 0.05;
   algo.MAX_EXPERIMENTS = 100000;
+
+  fileSink.writeln("STARTING NEW ALGO");
+  fileSink.writeln("Algo settings: ");
+  fileSink.writeln("  algo.MAX_EXPERIMENTS = ${algo.MAX_EXPERIMENTS};");
+  fileSink.writeln("  algo.THRESHOLD_RESULT = ${algo.THRESHOLD_RESULT};");
+  fileSink.writeln("  algo.generationSize = ${algo.generationSize};");
+  fileSink.writeln(
+      "  algo.MAX_GENERATIONS_IN_MEMORY = ${algo.MAX_GENERATIONS_IN_MEMORY};");
+  fileSink.writeln(
+      "  algo.breeder.fitnessSharing = ${algo.breeder.fitnessSharing};");
+  fileSink.writeln(
+      "  algo.breeder.fitnessSharingRadius = ${algo.breeder.fitnessSharingRadius};");
+  fileSink.writeln(
+      "  algo.breeder.fitnessSharingAlpha = ${algo.breeder.fitnessSharingAlpha};");
+  fileSink
+      .writeln("  algo.breeder.mutationRate = ${algo.breeder.mutationRate};");
+  fileSink.writeln(
+      "  algo.breeder.mutationStrength = ${algo.breeder.mutationStrength};");
+  fileSink.writeln(
+      "  algo.breeder.crossoverPropability = ${algo.breeder.crossoverPropability};");
+  fileSink
+      .writeln("  algo.breeder.elitismCount = ${algo.breeder.elitismCount};");
+
+  fileSink.writeln("\nFirst generation:");
+  for (var ph in algo.generations.last.members) {
+    fileSink.writeln("  const ${ph.genesAsString},");
+  }
 
   algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
     fileSink.writeln("\n\nGeneration ${algo.currentGeneration} evaluated:");
