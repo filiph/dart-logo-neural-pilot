@@ -78,7 +78,8 @@ class ParkingMode extends NeuralPilotMode {
         Math.max(distance / 10, orientationError).clamp(0, Math.PI * 2);
     double angVel = pilot.ship.body.angularVelocity.abs();
 
-    var sum = (Math.log(distance + 1) + orientationAndDistance + angVel);
+    var sum =
+        (5 * Math.log(distance + 1) + orientationAndDistance + angVel / 2);
     return sum;
   }
 
