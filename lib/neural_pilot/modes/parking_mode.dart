@@ -30,7 +30,13 @@ class ParkingMode extends NeuralPilotMode {
 
     var relativeVelocity =
         pilot.ship.body.getLinearVelocityFromLocalPoint(new Vector2.zero());
-    var relativeVelocityAngle = angle(relativeVelocity, relVector);
+
+    var relativeVelocityAngle;
+    if (distance == 0.0 || relativeVelocity.length2 == 0.0) {
+      relativeVelocityAngle = 0.0;
+    } else {
+      relativeVelocityAngle = angle(relativeVelocity, relVector);
+    }
 
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation);
