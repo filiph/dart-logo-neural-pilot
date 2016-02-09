@@ -19,7 +19,11 @@ Future main(List<String> args) async {
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.MAX_EXPERIMENTS = 100000;
-
+  algo.generationSize = 40;
+  algo.breeder.fitnessSharingRadius = 0.1;
+  algo.breeder.mutationRate = 0.02;
+  algo.breeder.elitismCount = 3;
+  
   fileSink.writeln("STARTING NEW ALGO");
   fileSink.writeln("Algo settings: ");
   fileSink.writeln("  algo.MAX_EXPERIMENTS = ${algo.MAX_EXPERIMENTS};");
