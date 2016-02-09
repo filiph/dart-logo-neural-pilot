@@ -17,14 +17,14 @@ GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
     VisualizationCallback onEndOneEvaluation,
     {List<List<num>> chromosomesList,
     TextOutputFunction showHeadline,
-    LoggingFunction logMessage}) {
+    LoggingFunction logMessage,
+    int generationSize: 40}) {
   if (logMessage == null) logMessage = print;
   if (showHeadline == null) showHeadline = (String msg) =>
       print("=== $msg ===");
 
   showHeadline("Evolving $pilotModeToTest");
 
-  int firstGenerationSize = 40;
   var firstGeneration = new Generation<NeuralPilotPhenotype>();
 
   var breeder = new GenerationBreeder<NeuralPilotPhenotype>(
@@ -40,7 +40,7 @@ GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
     });
   }
 
-  while (firstGeneration.members.length < firstGenerationSize) {
+  while (firstGeneration.members.length < generationSize) {
     // Create random neural network with the correct layout
     // by creating a dummy pilot.
     var dummyPilot =
