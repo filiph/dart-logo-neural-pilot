@@ -19,9 +19,10 @@ Future main(List<String> args) async {
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.MAX_EXPERIMENTS = 200000;
+  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 100;
   algo.breeder.fitnessSharingRadius = 0.1;
-  algo.breeder.mutationRate = 0.02;
-  algo.breeder.mutationStrength = 0.2;
+  algo.breeder.mutationRate = 0.01;
+  algo.breeder.mutationStrength = 0.5;
   algo.breeder.elitismCount = 3;
 
   fileSink.writeln("STARTING NEW ALGO");
@@ -51,11 +52,19 @@ Future main(List<String> args) async {
     fileSink.writeln("  const ${ph.genesAsString},");
   }
 
+  List<num> bestFitnessProgression = <num>[];
+
   algo.onGenerationEvaluated.listen((Generation<NeuralPilotPhenotype> g) {
     fileSink.writeln("\n\nGeneration ${algo.currentGeneration} evaluated:");
     fileSink.writeln("- BEST: ${g.bestFitness}");
     fileSink.writeln("- AVG: ${g.averageFitness}");
     fileSink.writeln("\n${g.best.genesAsString}");
+    bestFitnessProgression.add(g.bestFitness);
+    int lastImprovedGeneration = bestFitnessProgression.indexOf(g.bestFitness);
+    if (algo.currentGeneration - lastImprovedGeneration >
+        MAX_GENERATIONS_WITHOUT_IMPROVEMENT) {
+      algo.MAX_EXPERIMENTS = 0; // HACK! Should have something like algo.stop()
+    }
   });
 
   await algo.runUntilDone();
@@ -71,6 +80,12 @@ Future main(List<String> args) async {
     fileSink.writeln("  const ${ph.genesAsString},");
   }
   fileSink.writeln("];");
+
+  fileSink.writeln("\n\nGeneration,Best Score");
+  for (int i = 0; i < bestFitnessProgression.length; i++) {
+    fileSink.writeln("$i,${bestFitnessProgression[i]}");
+  }
+
   await fileSink.close();
   print("Done.");
   print("Winner = \n${algo.generations.last.best.genesAsString}");
