@@ -27,6 +27,7 @@ class NeuralPilot {
       // between the size of the input and size of the output
       // layers.' -- Jeff Heaton
       (mode.inputNeuronsCount + outputNeuronsCount) ~/ 2,
+      (mode.inputNeuronsCount + outputNeuronsCount) ~/ 2,
       outputNeuronsCount
     ], neuronPrototype);
   }
