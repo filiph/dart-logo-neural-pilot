@@ -14,6 +14,14 @@ class ParkingMode extends NeuralPilotMode {
 
   final Vector2 _forwardVector = new Vector2(0.0, 1.0);
 
+  Function showHeadlineFunction;
+
+  void showHeadline(String msg) {
+    if (showHeadlineFunction == null) return;
+
+    showHeadlineFunction(msg);
+  }
+
   @override
   List<num> getInputs(NeuralPilot pilot) {
     double angVel = pilot.ship.body.angularVelocity;
@@ -41,7 +49,7 @@ class ParkingMode extends NeuralPilotMode {
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation);
 
-    return <num>[
+    var inputs = <num>[
       valueToNeuralInput(angVel, -1, 1),
       valueToNeuralInput(relVector.x, -100, 100),
       valueToNeuralInput(relVector.y, -100, 100),
@@ -68,6 +76,10 @@ class ParkingMode extends NeuralPilotMode {
       valueToNeuralInput(pilot.ship.rightLeg.currentAngleNormalized, 0, 1),
       1.0
     ];
+
+    showHeadline(inputs.map((n) => n.toStringAsFixed(1)).join("\n"));
+
+    return inputs;
   }
 
   @override

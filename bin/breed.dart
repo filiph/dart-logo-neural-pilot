@@ -15,7 +15,8 @@ Future main(List<String> args) async {
   var filename = args.single;
   IOSink fileSink = new File(filename).openWrite();
 
-  var algo = setUpGeneticAlgorithm(new ParkingMode(), null, null, null,
+  var mode = new ParkingMode();
+  var algo = setUpGeneticAlgorithm(mode, null, null, null,
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.MAX_EXPERIMENTS = 200000;

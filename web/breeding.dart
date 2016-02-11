@@ -65,19 +65,28 @@ class CanvasBreederApp {
   Stopwatch _stopwatch;
 
   final Element canvasContainerEl;
+  Element _showHeadlineEl;
 
   static int computationToShowRatio = 1;
   static int computationToPrintRatio = 100;
   int _printCounter = 0;
 
-  CanvasBreederApp(this.canvasContainerEl);
+  CanvasBreederApp(this.canvasContainerEl) {
+    _showHeadlineEl = new PreElement()..style.position = "absolute";
+    canvasContainerEl.append(_showHeadlineEl);
+  }
+
+  showHeadline(String text) {
+    _showHeadlineEl.text = text;
+  }
 
   GeneticAlgorithm<NeuralPilotPhenotype> algo;
 
   void start() {
-    algo = setUpGeneticAlgorithm(new ParkingMode(), visualizationCallback,
-        initializeAnimation, destroyAnimation,
-        chromosomesList: CHROMOSOMES_LIST);
+    var mode = new ParkingMode()..showHeadlineFunction = showHeadline;
+    algo = setUpGeneticAlgorithm(
+        mode, visualizationCallback, initializeAnimation, destroyAnimation,
+        showHeadline: showHeadline, chromosomesList: CHROMOSOMES_LIST);
 
     algo.MAX_EXPERIMENTS = 20000;
 
