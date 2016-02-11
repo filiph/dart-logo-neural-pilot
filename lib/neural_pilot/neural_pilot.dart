@@ -9,10 +9,6 @@ import 'package:dart_summit_2016/ann.dart';
 class NeuralPilot {
   final NeuralPilotMode mode;
 
-  // TODO(filiph): get rid of this, make a better implementation of Neuron
-  // http://stackoverflow.com/questions/4719633/java-simple-neural-network-setup
-  static final Neuron neuronPrototype = new TanHNeuron();
-
   DartShip ship;
   World world;
   Network neuralNetwork;
@@ -20,7 +16,8 @@ class NeuralPilot {
   final int outputNeuronsCount;
 
   NeuralPilot(this.mode, this.outputNeuronsCount) {
-    neuralNetwork = new Network(mode.inputNeuronsCount, outputNeuronsCount);
+    neuralNetwork = new Network(mode.inputNeuronsCount, outputNeuronsCount,
+        hiddenLayers: 2);
     neuralNetwork.randomizeWeights();
   }
 
