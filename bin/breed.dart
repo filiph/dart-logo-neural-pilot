@@ -20,10 +20,10 @@ Future main(List<String> args) async {
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.MAX_EXPERIMENTS = 200000;
-  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 100;
+  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 200;
   algo.breeder.fitnessSharingRadius = 0.1;
   algo.breeder.mutationRate = 0.01;
-  algo.breeder.mutationStrength = 0.5;
+  algo.breeder.mutationStrength = 1.0;
   algo.breeder.elitismCount = 3;
 
   fileSink.writeln("STARTING NEW ALGO");
