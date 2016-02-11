@@ -20,11 +20,11 @@ Future main(List<String> args) async {
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.MAX_EXPERIMENTS = 200000;
-  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 200;
+  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 500;
   algo.breeder.fitnessSharingRadius = 0.1;
-  algo.breeder.mutationRate = 0.01;
+  algo.breeder.mutationRate = 0.03;
   algo.breeder.mutationStrength = 1.0;
-  algo.breeder.elitismCount = 3;
+  algo.breeder.elitismCount = 1;
 
   fileSink.writeln("STARTING NEW ALGO");
   fileSink.writeln("Algo settings: ");
@@ -65,6 +65,9 @@ Future main(List<String> args) async {
     if (algo.currentGeneration - lastImprovedGeneration >
         MAX_GENERATIONS_WITHOUT_IMPROVEMENT) {
       algo.MAX_EXPERIMENTS = 0; // HACK! Should have something like algo.stop()
+    }
+    if (algo.currentGeneration == 1000) {
+      algo.breeder.mutationRate = 0.01;
     }
   });
 
