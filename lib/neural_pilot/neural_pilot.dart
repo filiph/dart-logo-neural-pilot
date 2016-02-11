@@ -1,10 +1,10 @@
 library dart_summit_2016.neural_pilot;
 
-import 'package:backy/backy.dart';
 import 'package:box2d/box2d.dart';
 
 import 'package:dart_summit_2016/ship/dartship.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot_mode.dart';
+import 'package:dart_summit_2016/ann.dart';
 
 class NeuralPilot {
   final NeuralPilotMode mode;
@@ -15,21 +15,13 @@ class NeuralPilot {
 
   DartShip ship;
   World world;
-  Backy neuralNetwork;
+  Network neuralNetwork;
 
   final int outputNeuronsCount;
 
   NeuralPilot(this.mode, this.outputNeuronsCount) {
-    neuronPrototype.bias = 1;
-    neuralNetwork = new Backy([
-      mode.inputNeuronsCount,
-      // 'The optimal size of the hidden layer is usually
-      // between the size of the input and size of the output
-      // layers.' -- Jeff Heaton
-      (mode.inputNeuronsCount + outputNeuronsCount) ~/ 2,
-      (mode.inputNeuronsCount + outputNeuronsCount) ~/ 2,
-      outputNeuronsCount
-    ], neuronPrototype);
+    neuralNetwork = new Network(mode.inputNeuronsCount, outputNeuronsCount);
+    neuralNetwork.randomizeWeights();
   }
 
   NeuralPilot.fromShip(NeuralPilotMode mode, DartShip ship)
@@ -66,15 +58,6 @@ class NeuralPilot {
   }
 
   void setNeuralNetworkFromGenes(List<num> genes) {
-    int n = 0;
-    for (int i = 0; i < neuralNetwork.weights.length; i++) {
-      for (int j = 0; j < neuralNetwork.weights[i].weights.length; j++) {
-        for (int k = 0; k < neuralNetwork.weights[i].weights[j].length; k++) {
-          neuralNetwork.weights[i].weights[j][k] = genes[n];
-          n++;
-        }
-      }
-    }
-    assert(n == genes.length);
+    neuralNetwork.setWeights(genes);
   }
 }

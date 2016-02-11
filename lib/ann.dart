@@ -58,7 +58,7 @@ class Network {
   Network(inputs, outputs, {int hiddenLayers: 1})
       : inputs = inputs,
         outputs = outputs {
-    int hiddenLayerNeuronCount = inputs + (inputs - outputs) ~/ 2;
+    int hiddenLayerNeuronCount = (inputs + outputs) ~/ 2;
     _layers = new List<Layer>.generate(hiddenLayers + 1, (int index) {
       if (index == 0) {
         return new Layer(hiddenLayerNeuronCount, inputs);

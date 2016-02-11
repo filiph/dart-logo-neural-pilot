@@ -4,11 +4,11 @@ import 'dart:async';
 import 'dart:math' as Math;
 
 import 'package:darwin/darwin.dart';
-import 'package:backy/backy.dart';
 
 import 'package:dart_summit_2016/simulation.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot_mode.dart';
 import 'package:dart_summit_2016/neural_pilot/neural_pilot.dart';
+import 'package:dart_summit_2016/ann.dart';
 
 GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
     NeuralPilotMode pilotModeToTest,
@@ -45,8 +45,8 @@ GeneticAlgorithm<NeuralPilotPhenotype> setUpGeneticAlgorithm(
     // by creating a dummy pilot.
     var dummyPilot =
         new NeuralPilot.fromShip(pilotModeToTest, new Simulation().ship);
-    var ph = new NeuralPilotPhenotype.fromBackyWeights(
-        dummyPilot.neuralNetwork.weights);
+    var ph = new NeuralPilotPhenotype.fromNeuralNetwork(
+        dummyPilot.neuralNetwork);
     firstGeneration.members.add(ph);
   }
 
@@ -66,23 +66,8 @@ typedef LoggingFunction(String message);
 class NeuralPilotPhenotype extends Phenotype<num> {
   NeuralPilotPhenotype();
 
-  NeuralPilotPhenotype.fromBackyWeights(List<Weight> weightObjects) {
-    List<List<List<num>>> weights =
-        new List<List<List<num>>>(weightObjects.length);
-    for (int i = 0; i < weightObjects.length; i++) {
-      List<List<num>> array = weightObjects[i].weights;
-      weights[i] = new List<List<num>>(array.length);
-      for (int j = 0; j < array.length; j++) {
-        weights[i][j] = new List<num>(array[j].length);
-        for (int k = 0; k < array[j].length; k++) {
-          weights[i][j][k] = array[j][k];
-        }
-      }
-    }
-    genes = weights
-        .expand(
-            (List<List<num>> planes) => planes.expand((List<num> rows) => rows))
-        .toList(growable: false);
+  NeuralPilotPhenotype.fromNeuralNetwork(Network neuralNetwork) {
+    genes = neuralNetwork.weights;
   }
 
   List<num> genes;
