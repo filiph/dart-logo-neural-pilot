@@ -74,7 +74,8 @@ class ParkingMode extends NeuralPilotMode {
       valueToNeuralInput(pilot.ship.rightFlap.currentAngleNormalized, 0, 1),
       valueToNeuralInput(pilot.ship.leftLeg.currentAngleNormalized, 0, 1),
       valueToNeuralInput(pilot.ship.rightLeg.currentAngleNormalized, 0, 1),
-      1.0
+      1.0,
+      -1.0
     ];
 
     showHeadline(inputs.map((n) => n.toStringAsFixed(1)).join("\n"));
@@ -83,7 +84,7 @@ class ParkingMode extends NeuralPilotMode {
   }
 
   @override
-  int inputNeuronsCount = 25;
+  int inputNeuronsCount = 26;
 
   @override
   num iterativeFitnessFunction(NeuralPilot pilot) {
