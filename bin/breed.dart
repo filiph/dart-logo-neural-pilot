@@ -23,7 +23,7 @@ Future main(List<String> args) async {
   int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 500;
   algo.breeder.fitnessSharingRadius = 0.1;
   algo.breeder.mutationRate = 0.03;
-  algo.breeder.mutationStrength = 1.0;
+  algo.breeder.mutationStrength = 0.2;
   algo.breeder.elitismCount = 1;
 
   fileSink.writeln("STARTING NEW ALGO");
