@@ -20,11 +20,13 @@ Future main(List<String> args) async {
       chromosomesList: CHROMOSOMES_LIST);
 
   algo.MAX_EXPERIMENTS = 200000;
-  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 500;
+  int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 1000;
   algo.breeder.fitnessSharingRadius = 0.1;
-  algo.breeder.mutationRate = 0.03;
+  var INITIAL_MUTATION_RATE = 0.03;
+  var END_MUTATION_RATE = 0.001;
+  algo.breeder.mutationRate = INITIAL_MUTATION_RATE;
   algo.breeder.mutationStrength = 0.2;
-  algo.breeder.elitismCount = 1;
+  algo.breeder.elitismCount = 0;
 
   fileSink.writeln("STARTING NEW ALGO");
   fileSink.writeln("Algo settings: ");
@@ -66,9 +68,12 @@ Future main(List<String> args) async {
         MAX_GENERATIONS_WITHOUT_IMPROVEMENT) {
       algo.MAX_EXPERIMENTS = 0; // HACK! Should have something like algo.stop()
     }
-    if (algo.currentGeneration == 1000) {
-      algo.breeder.mutationRate = 0.01;
-    }
+    // Decrease mutation rate as we approach generation 5000
+    algo.breeder.mutationRate = INITIAL_MUTATION_RATE -
+        (INITIAL_MUTATION_RATE - END_MUTATION_RATE) /
+            algo.MAX_EXPERIMENTS *
+            (algo.currentExperiment + 1);
+    print("Current mutationRate == ${algo.breeder.mutationRate}");
   });
 
   await algo.runUntilDone();
