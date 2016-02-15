@@ -76,7 +76,7 @@ class ParkingMode extends NeuralPilotMode {
       valueToNeuralInput(pilot.ship.rightLeg.currentAngleNormalized, 0, 1)
     ];
 
-    showHeadline(inputs.map((n) => n.toStringAsFixed(1)).join("\n"));
+    // showHeadline(inputs.map((n) => n.toStringAsFixed(1)).join("\n"));
 
     return inputs;
   }
@@ -92,24 +92,34 @@ class ParkingMode extends NeuralPilotMode {
     }
     var forward = pilot.ship.body.getWorldVector(_forwardVector);
     var orientationError = angle(forward, targetOrientation).abs();
-    var orientationAndDistance =
-        Math.max(distance / 10, orientationError).clamp(0, Math.PI * 2);
     double angVel = pilot.ship.body.angularVelocity.abs();
+    var orientationAndDistance = Math
+        .max(Math.max(distance / 10, orientationError), angVel)
+        .clamp(0, Math.PI * 2);
+    var consumption = pilot.ship.thrusters
+        .fold(0.0, (prev, thruster) => prev + thruster.currentPower);
+
+    // showHeadline([
+    //   distance / 2,
+    //   orientationAndDistance,
+    //   angVel / 2,
+    //   consumption / 2
+    // ].map((n) => n.toStringAsFixed(1)).join("\n"));
 
     var sum =
-        (5 * Math.log(distance + 1) + orientationAndDistance + angVel / 2);
+        (distance / 2 + orientationAndDistance + angVel / 2 + consumption / 2);
     return sum;
   }
 
   @override
   List<SetupFunction> get setupFunctions => [
         (s) {
-          targetPosition = new Vector2.zero();
-          targetOrientation = new Vector2(1.0, 0.0);
-        },
-        (s) {
           targetPosition = new Vector2(50.0, 0.0);
           targetOrientation = new Vector2(-1.0, 0.0);
+        },
+        (s) {
+          targetPosition = new Vector2.zero();
+          targetOrientation = new Vector2(1.0, 0.0);
         },
         (s) {
           targetPosition = new Vector2(150.0, 10.0);
@@ -128,7 +138,7 @@ class ParkingMode extends NeuralPilotMode {
           targetOrientation = new Vector2(0.0, -1.0);
         },
         (s) {
-          targetPosition = new Vector2(200.0, -1000.0);
+          targetPosition = new Vector2(200.0, -500.0);
           targetOrientation = new Vector2(0.5, 1.0);
         }
       ];
