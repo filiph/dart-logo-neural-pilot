@@ -26,7 +26,7 @@ Future main(List<String> args) async {
   var END_MUTATION_RATE = 0.001;
   algo.breeder.mutationRate = INITIAL_MUTATION_RATE;
   algo.breeder.mutationStrength = 0.2;
-  algo.breeder.elitismCount = 0;
+  algo.breeder.elitismCount = 3;
 
   fileSink.writeln("STARTING NEW ALGO");
   fileSink.writeln("Algo settings: ");
