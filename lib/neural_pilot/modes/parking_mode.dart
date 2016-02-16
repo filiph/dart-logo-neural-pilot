@@ -50,13 +50,14 @@ class ParkingMode extends NeuralPilotMode {
     var orientationError = angle(forward, targetOrientation);
 
     var inputs = <num>[
-      valueToNeuralInput(angVel, -1, 1),
+      valueToNeuralInput(angVel, 0, 1),
+      valueToNeuralInput(angVel, 0, -1),
       valueToNeuralInput(relVector.x, -100, 100),
       valueToNeuralInput(relVector.y, -100, 100),
       valueToNeuralInput(relVector.x, -10, 10),
       valueToNeuralInput(relVector.y, -10, 10),
-      Math.sin(angleToTarget),
-      Math.cos(angleToTarget),
+      valueToNeuralInput(angleToTarget, 0, 1 * Math.PI),
+      valueToNeuralInput(angleToTarget, 0, -1 * Math.PI),
       valueToNeuralInput(velocity.length, 0, 5),
       valueToNeuralInput(velocity.x, -10, 10),
       valueToNeuralInput(velocity.y, -10, 10),
@@ -66,23 +67,25 @@ class ParkingMode extends NeuralPilotMode {
       valueToNeuralInput(relativeVelocity.y, -10, 10),
       valueToNeuralInput(relativeVelocity.x, -100, 100),
       valueToNeuralInput(relativeVelocity.y, -100, 100),
-      Math.sin(relativeVelocityAngle),
-      Math.cos(relativeVelocityAngle),
-      Math.sin(orientationError),
-      Math.cos(orientationError),
+      valueToNeuralInput(relativeVelocityAngle, 0, 1 * Math.PI),
+      valueToNeuralInput(relativeVelocityAngle, 0, -1 * Math.PI),
+      valueToNeuralInput(orientationError, 0, 1 * Math.PI),
+      valueToNeuralInput(orientationError, 0, -1 * Math.PI),
       valueToNeuralInput(pilot.ship.leftFlap.currentAngleNormalized, 0, 1),
       valueToNeuralInput(pilot.ship.rightFlap.currentAngleNormalized, 0, 1),
       valueToNeuralInput(pilot.ship.leftLeg.currentAngleNormalized, 0, 1),
       valueToNeuralInput(pilot.ship.rightLeg.currentAngleNormalized, 0, 1)
     ];
 
-    // showHeadline(inputs.map((n) => n.toStringAsFixed(1)).join("\n"));
+    // var inputString =
+    //     inputs.skip(16).map((n) => n.toStringAsFixed(1)).join("\n");
+    // showHeadline("angleToTarget = $angleToTarget\n$inputString");
 
     return inputs;
   }
 
   @override
-  int inputNeuronsCount = 24;
+  int inputNeuronsCount = 25;
 
   @override
   num iterativeFitnessFunction(NeuralPilot pilot) {
