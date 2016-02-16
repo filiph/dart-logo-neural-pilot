@@ -71,11 +71,20 @@ num valueToNeuralInput(num value, num min, num max) {
   }
   bool inversed = min > max;
 
-  if (value <= min) {
-    return inversed ? 1.0 : -1.0;
-  }
-  if (value >= max) {
-    return inversed ? -1.0 : 1.0;
+  if (!inversed) {
+    if (value <= min) {
+      return -1.0;
+    }
+    if (value >= max) {
+      return 1.0;
+    }
+  } else {
+    if (value <= max) {
+      return 1.0;
+    }
+    if (value >= min) {
+      return -1.0;
+    }
   }
 
   return (value - min) / (max - min) * 2 - 1;
