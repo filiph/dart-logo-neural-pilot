@@ -77,8 +77,7 @@ class ParkingMode extends NeuralPilotMode {
       valueToNeuralInput(pilot.ship.rightLeg.currentAngleNormalized, 0, 1)
     ];
 
-    // var inputString =
-    //     inputs.skip(16).map((n) => n.toStringAsFixed(1)).join("\n");
+    // var inputString = inputs.map((n) => n.toStringAsFixed(1)).join("\n");
     // showHeadline("angleToTarget = $angleToTarget\n$inputString");
 
     return inputs;
@@ -104,13 +103,13 @@ class ParkingMode extends NeuralPilotMode {
 
     // showHeadline([
     //   distance / 2,
-    //   orientationAndDistance,
-    //   angVel / 2,
+    //   orientationAndDistance * 2,
+    //   angVel,
     //   consumption / 2
     // ].map((n) => n.toStringAsFixed(1)).join("\n"));
 
     var sum =
-        (distance / 2 + orientationAndDistance + angVel / 2 + consumption / 2);
+        (distance / 2 + orientationAndDistance * 2 + angVel + consumption / 2);
     return sum;
   }
 

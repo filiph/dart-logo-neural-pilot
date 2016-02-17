@@ -17,7 +17,7 @@ class NeuralPilot {
 
   NeuralPilot(this.mode, this.outputNeuronsCount) {
     neuralNetwork = new Network(mode.inputNeuronsCount, outputNeuronsCount,
-        hiddenLayers: 2);
+        hiddenLayers: 1);
     neuralNetwork.randomizeWeights();
   }
 
